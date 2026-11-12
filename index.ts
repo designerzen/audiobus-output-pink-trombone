@@ -1,21 +1,49 @@
 /**
- * @harmoneasy/pink-trombone
- * Pink Trombone speech synthesis integration for HarmonEasy
+ * audiobus-output-pink-trombone
+ * Neil Thapen's Pink Trombone vocal synthesiser as an audiobus output.
+ *
+ * Importing this entry is side-effect free: the engine (which needs a browser)
+ * loads only when an output is created.
  */
+import type { Config } from "./output-pink-trombone.ts"
 
-export { PinkTrombone, PinkTromboneConfig } from "./pink-trombone.js"
+export type { Config as PinkTromboneConfig } from "./output-pink-trombone.ts"
+export type OutputPinkTrombone = import("./output-pink-trombone.ts").default
 
-export { PinkTromboneWorkletProcessor } from "./pink-trombone-worklet-processor.js"
+export const PINK_TROMBONE_OUTPUT_ID = "pink-trombone"
 
-export { PinkTromboneOutput } from "./pink-trombone-output.ts"
+export interface PinkTromboneCreateOptions extends Partial<Config> {
+	audioContext?: AudioContext
+	destination?: AudioNode
+}
 
-export { createPinkTrombone, initializePinkTrombone } from "./pink-trombone-factory.ts"
+/** Describes the output for a host's device picker; compatible with audiobus's OutputDefinition. */
+export const pinkTromboneDefinition = {
+	id: PINK_TROMBONE_OUTPUT_ID,
+	type: "engine",
+	subtype: "instrument",
+	name: "Pink Trombone",
+	description: "Vocal synthesis engine with speech-like sounds",
+	icon: new URL("./assets/output-pink-trombone.svg", import.meta.url).href,
+	preview: new URL("./assets/output-pink-trombone-preview.jpg", import.meta.url).href,
+	category: "Synthesis"
+} as const
 
-export type {
-	VibratoParams,
-	VocalTractParams,
-	VowelParams,
-	BreathingParams,
-	Position,
-	AutomationParams
-} from "./pink-trombone-types.ts"
+/** Load the output class on demand. */
+export async function loadOutputPinkTrombone() {
+	return (await import("./output-pink-trombone.ts")).default
+}
+
+export async function createOutputPinkTrombone(
+	options: PinkTromboneCreateOptions = {}
+): Promise<OutputPinkTrombone> {
+	const OutputPinkTrombone = await loadOutputPinkTrombone()
+	return new OutputPinkTrombone(options)
+}
+
+/** Pass to audiobus's registerOutput() to add Pink Trombone to its outputs. */
+export const pinkTromboneOutput = {
+	definition: pinkTromboneDefinition,
+	isAvailable: () => typeof window !== "undefined" && typeof AudioWorkletNode !== "undefined",
+	create: createOutputPinkTrombone
+}

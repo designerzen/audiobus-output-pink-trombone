@@ -1,24 +1,30 @@
 {
-	"name": "pink-trombone",
-	"version": "0.3.0",
-	"description": "Pink Trombone speech synthesis integration for HarmonEasy",
+	"name": "audiobus-output-pink-trombone",
+	"version": "0.4.0",
+	"description": "Pink Trombone vocal synthesis as an audiobus output",
 	"type": "module",
 	"main": "index.ts",
+	"types": "index.ts",
 	"exports": {
 		".": "./index.ts",
+		"./output": "./output-pink-trombone.ts",
 		"./pink-trombone.js": "./pink-trombone.js"
 	},
+	"sideEffects": [
+		"./pink-trombone.js",
+		"./output-pink-trombone.ts"
+	],
 	"scripts": {
-		"dev": "echo 'No dev server for this package'",
-		"lint": "oxlint .",
-		"lint:fix": "oxlint --fix ."
+		"type-check": "tsc --noEmit"
 	},
 	"files": [
 		"*.ts",
-		"*.wasm"
+		"*.js",
+		"assets"
 	],
-	"dependencies": {
-		"@harmoneasy/shared-config": "workspace:^"
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/designerzen/audiobus-output-pink-trombone.git"
 	},
 	"devDependencies": {
 		"typescript": "~5.9.3"
