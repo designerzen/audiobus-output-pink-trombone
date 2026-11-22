@@ -47,6 +47,8 @@ The `<pink-trombone>` element itself is available from `audiobus-output-pink-tro
 
 The main entry only describes the output. The engine needs a browser with `AudioWorklet`, and loads when an output is created.
 
+Enable/resume the supplied AudioContext from a user action before playing. On removal, release notes with `allNotesOff()` and await `destroy()`; the host owns closing its context. [index.ts](index.ts) defines the lazy package exports, [the output](output-pink-trombone.ts) defines the current options and lifecycle, and [package.json](package.json) declares the package version and `type-check` command. The Harmoneasy host already registers `pink-trombone`; no additional registration is needed in a preset.
+
 ## Credits
 
 Pink Trombone was created by [Neil Thapen](https://dood.al/pinktrombone/). See the original source for its licence.
